@@ -1,0 +1,257 @@
+`You will build a single-page frontend application that consumes a provided API for a game called Timeline.
+This game is a very simple game, is similar to a quiz or something like wordle.
+
+🧠 Game Concept
+
+The game works as follows:
+
+The player receives a historical event (a “card”).
+
+The player must place this event in the correct chronological position in the timeline.
+
+If correct:
+
+The event is added to the timeline.
+
+If incorrect:
+
+The player loses one life.
+
+In both cases:
+
+The player receives a new card.ww
+
+All game rules, validation, and state transitions are handled by the API.
+
+The frontend must only consume the API and render the state accordingly.
+
+This game state is based on:
+```
+"player_hand": [
+    {
+        "id": 15,
+        "title": "The first public use of ether as an anesthetic",
+        "summary": "William T.G. Morton made the first public demonstration of ether anesthesia at Massachusetts General Hospital.",
+        "year": null
+    }
+],
+"timeline": [
+    {
+        "id": 8,
+        "title": "The invention of the printing press",
+        "summary": "Johannes Gutenberg invented the printing press with movable type around 1440, revolutionizing communication.",
+        "year": 1440
+    },
+   {
+        "id": 8,
+        "title": "The release of python",
+        "summary": "Guido van rosson realases frist version of Python prgramming language.",
+        "year": 1995
+    }
+],
+"remaining_deck": 13,
+"remaining_life": 3,
+"status": "ongoing"
+```
+
+🎨 Color Palette
+
+Background	#121212
+Tile base	#1F1F1F
+Primary text	#EAEAEA
+Correct	#2ECC71
+Wrong	#E74C3C
+
+
+🧩 Requirements
+UI
+
+Only one page for the game
+
+Timeline visualization Make it in a way that desktop players and mobile players can play at the browser
+
+Current card clearly visible and draggable to the timeline possition
+
+Lives counter
+
+Game over and success states
+
+Loading and error states
+
+UX
+
+Immediate feedback on correct/incorrect moves
+
+Smooth animations for inserting cards into the timeline
+
+Mobile responsive
+
+Architecture
+
+Clean component separation
+
+API layer abstraction
+
+Strong typing if applicable (TypeScript preferred)
+
+State management using React hooks or lightweight store
+
+The simple as possible stack to make the CSS
+
+⚙️ Tech Stack
+
+Framework: React
+
+Data fetching: Fetch API or Axios
+
+API DOC
+
+## Timeline Game API Documentation
+
+   Domain = 127.0.0.1:8000
+
+  This document outlines the API endpoints for the Timeline game, which will be used by the front-end application.
+
+  1. Create a New Match
+
+  Creates a new game match, initializes the deck, the player's hand, and the timeline.
+
+   - Path: GET /api/match/
+   - Method: GET
+   - Payload: None
+
+  ---
+
+   - Success Response (200 OK):
+
+      Returns a JSON object representing the initial state of the match.
+
+    1     {
+    2         "id": 1,
+    3         "player_hand": [
+    4             {
+    5                 "id": 15,
+    6                 "title": "The first public use of ether as an anesthetic",
+    7                 "summary": "In 1846, William T.G. Morton made the first public demonstration of ether anesthesia at Massachusetts General Hospital.",
+    9                 "year": null
+   10             }
+   11         ],
+   12         "timeline": [
+   13             {
+   14                 "id": 8,
+   15                 "title": "The invention of the printing press",
+   16                 "summary": "Johannes Gutenberg invented the printing press with movable type around 1440, revolutionizing communication.",
+   18                 "year": 1440
+   19             }
+   20         ],
+   21         "remaining_deck": 13,
+   22         "remaining_life": 3,
+   23         "status": "ongoing"
+   24     }
+
+      Response Fields:
+       - id (integer): The unique identifier for the match.
+       - player_hand (array): A list of "occurrence" objects the player holds. The year is hidden (null).
+       - timeline (array): A list of "occurrence" objects already placed on the timeline. The year is visible.
+       - remaining_deck (integer): The number of cards left in the draw deck.
+       - remaining_life (integer): The number of incorrect guesses the player has left.
+       - status (string): The current status of the match ("ongoing", "win", or "lose").
+
+  2. Get Match Details
+
+  Retrieves the current state of a specific match by its ID.
+
+   - Path: GET /api/match/<match_id>/
+   - Method: GET
+   - Payload: None
+
+  ---
+
+   - Success Response (200 OK):
+
+      Returns a JSON object with the same structure as the "Create a New Match" endpoint.
+
+   1     {
+   2         "id": 1,
+   3         "player_hand": [ ... ],
+   4         "timeline": [ ... ],
+   5         "remaining_deck": 12,
+   6         "remaining_life": 2,
+   7         "status": "ongoing"
+   8     }
+
+   - Error Response (404 Not Found):
+
+      Returned if the match_id does not exist.
+
+   1     {
+   2         "error": "Not found"
+   3     }
+
+  3. Play a Card (Submit an Occurrence)
+
+  Submits an occurrence (a card) from the player's hand to a specific position on the timeline. The server validates if the placement is correct.
+
+   - Path: POST /api/match/<match_id>/
+   - Method: POST
+   - Payload:
+
+      A JSON object containing the ID of the card being played and its target position on the timeline.
+
+   1     {
+   2         "occurrence_id": 15,
+   3         "position": 1
+   4     }
+
+      Payload Fields:
+       - occurrence_id (integer): The id of the card from the player_hand that is being played.
+       - position (integer): The zero-indexed position in the timeline where the card is intended to be placed. 0 means before the first card, 1 means between the first and second card, and so on.
+
+  ---
+
+   - Success Response (200 OK):
+
+      Returns an object containing the result of the play ("correct" or "incorrect") and the updated state of the match.
+
+    1     {
+    2         "status": "correct",
+    3         "match": {
+    4             "id": 1,
+    5             "player_hand": [
+    6                 {
+    7                     "id": 22,
+    8                     "title": "The fall of the Berlin Wall",
+    9                     "summary": "The Berlin Wall fell on November 9, 1989, symbolizing the end of the Cold War.",
+   11                     "year": null
+   12                 }
+   13             ],
+   14             "timeline": [
+   15                 { "id": 8, "title": "...", "year": 1440 },
+   16                 { "id": 15, "title": "...", "year": 1846 }
+   17             ],
+   18             "remaining_deck": 12,
+   19             "remaining_life": 3,
+   20             "status": "ongoing"
+   21         }
+   22     }
+
+      Response Fields:
+       - status (string): "correct" if the card was placed in the right spot, "incorrect" otherwise.
+       - match (object): The new state of the match after the move.
+           - If the play was correct, the card moves from player_hand to timeline, a new card is drawn, and remaining_deck decreases.
+           - If the play was incorrect, remaining_life decreases, the played card is discarded, and a new card is drawn. If remaining_life reaches 0, the match status will become "lose".
+
+   - Error Response (400 Bad Request):
+
+      Returned if the JSON payload is malformed.
+
+   1     {
+   2         "error": "Invalid JSON"
+   3     }
+   - Error Response (404 Not Found):
+
+      Returned if the match_id does not exist.
+
+   1     {
+   2         "error": "Not found"
+   3     }
