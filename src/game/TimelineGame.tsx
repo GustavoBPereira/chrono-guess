@@ -74,7 +74,7 @@ export default function TimelineGame() {
   const currentCard = match.player_hand.length > 0 ? match.player_hand[0] : null;
 
   if (match.status === 'win') {
-    return <Victory onRestart={startNewGame} score={match.timeline.length} />;
+    return <Victory onRestart={startNewGame} score={match.timeline.length} occurrences_played={match.timeline.length + match.mistakes.length} />;
   }
 
   if (match.status === 'lose') {

@@ -4,9 +4,10 @@ import { RotateCcw, Trophy, Sparkles } from 'lucide-react';
 interface VictoryProps {
   onRestart: () => void;
   score: number;
+  occurrences_played: number;
 }
 
-export function Victory({ onRestart, score }: VictoryProps) {
+export function Victory({ onRestart, score, occurrences_played}: VictoryProps) {
   return (
     <div className="min-h-screen flex items-center justify-center p-8">
       <motion.div
@@ -59,9 +60,9 @@ export function Victory({ onRestart, score }: VictoryProps) {
         </p>
 
         <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg p-6 mb-8 relative z-10">
-          <p className="text-gray-600 mb-2">Perfect Score</p>
+          {score === occurrences_played ? "Perfect Score" : "Your Score"}
           <p className="text-5xl font-bold bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent">
-            {score}/{score}
+            {score}/{occurrences_played}
           </p>
         </div>
 
