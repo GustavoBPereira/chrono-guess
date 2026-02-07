@@ -1,6 +1,8 @@
 import { motion } from 'motion/react';
+import { useDrop } from 'react-dnd';
 import { Occurrence } from '../types/game';
 import { CalendarDays } from 'lucide-react';
+import { ItemTypes } from './TimelineGame';
 
 interface TimelineProps {
   events: Occurrence[];
@@ -17,9 +19,9 @@ export function Timeline({ events, onPlacement, disabled }: TimelineProps) {
           <div key={event.id}>
             {/* Placement zone before this event */}
             {index === 0 && (
-              <PlacementZone 
-                position={0} 
-                onPlace={onPlacement} 
+              <PlacementZone
+                position={0}
+                onPlace={onPlacement}
                 disabled={disabled}
                 label="Place here (earliest)"
               />
@@ -47,9 +49,9 @@ export function Timeline({ events, onPlacement, disabled }: TimelineProps) {
             </motion.div>
 
             {/* Placement zone after this event */}
-            <PlacementZone 
-              position={index + 1} 
-              onPlace={onPlacement} 
+            <PlacementZone
+              position={index + 1}
+              onPlace={onPlacement}
               disabled={disabled}
               label={index === events.length - 1 ? "Place here (latest)" : "Place here"}
             />
@@ -68,17 +70,32 @@ interface PlacementZoneProps {
 }
 
 function PlacementZone({ position, onPlace, disabled, label }: PlacementZoneProps) {
+  const [{ isOver, canDrop }, drop] = useDrop(() => ({
+    accept: ItemTypes.CARD,
+    canDrop: () => !disabled,
+    drop: () => onPlace(position),
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver(),
+      canDrop: !!monitor.canDrop(),
+    }),
+  }), [disabled, onPlace, position]);
+
+  const isActive = canDrop && isOver;
+
   return (
     <motion.button
+      ref={drop}
       onClick={() => !disabled && onPlace(position)}
       disabled={disabled}
       whileHover={{ scale: disabled ? 1 : 1.02 }}
       whileTap={{ scale: disabled ? 1 : 0.98 }}
       className={`
         w-full py-3 border border-dashed rounded-md transition-all duration-200
-        ${disabled 
-          ? 'border-gray-200 bg-gray-50/50 cursor-not-allowed opacity-40' 
-          : 'border-indigo-200 bg-indigo-50/30 hover:bg-indigo-50 hover:border-indigo-300 cursor-pointer'
+        ${disabled
+          ? 'border-gray-200 bg-gray-50/50 cursor-not-allowed opacity-40'
+          : isActive
+            ? 'border-indigo-400 bg-indigo-100 scale-105'
+            : 'border-indigo-200 bg-indigo-50/30 hover:bg-indigo-50 hover:border-indigo-300 cursor-pointer'
         }
       `}
     >

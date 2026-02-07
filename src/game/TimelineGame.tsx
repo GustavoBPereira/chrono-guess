@@ -1,11 +1,41 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDrag } from 'react-dnd';
 import { Heart, Trophy, Calendar } from 'lucide-react';
+
+export const ItemTypes = {
+  CARD: 'card',
+};
 import { EventCard } from './EventCard';
 import { Timeline } from './Timeline';
 import { GameOver } from './GameOver';
 import { Victory } from './Victory';
 import { Match, Occurrence } from '../types/game';
 import { createMatch, playCard } from '../services/game';
+
+interface DraggableCardProps {
+  children: React.ReactNode;
+}
+
+function DraggableCard({ children }: DraggableCardProps) {
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: ItemTypes.CARD,
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }));
+
+  return (
+    <div
+      ref={drag}
+      style={{
+        opacity: isDragging ? 0.5 : 1,
+        cursor: 'move',
+      }}
+    >
+      {children}
+    </div>
+  );
+}
 
 export default function TimelineGame() {
   const [match, setMatch] = useState<Match | null>(null);
@@ -118,14 +148,16 @@ export default function TimelineGame() {
         {/* Current Card */}
         {currentCard && (
           <div className="fixed bottom-0 left-0 right-0 flex justify-center p-4 z-20">
-            <EventCard event={currentCard} isCorrect={isCorrect} />
+            <DraggableCard>
+              <EventCard event={currentCard} isCorrect={isCorrect} />
+            </DraggableCard>
           </div>
         )}
 
         {/* Timeline */}
-        <Timeline 
-          events={match.timeline} 
-          onPlacement={handlePlacement} 
+        <Timeline
+          events={match.timeline}
+          onPlacement={handlePlacement}
           disabled={isCorrect !== null || loading}
         />
       </div>

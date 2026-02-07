@@ -12,8 +12,8 @@ export function EventCard({ event, isCorrect, revealed = false }: EventCardProps
   return (
     <motion.div
       initial={{ scale: 0.8, opacity: 0 }}
-      animate={{ 
-        scale: 1, 
+      animate={{
+        scale: 1,
         opacity: 1,
         rotateY: isCorrect === true ? [0, 10, -10, 0] : 0,
         x: isCorrect === false ? [0, -10, 10, -10, 10, 0] : 0,
@@ -21,7 +21,7 @@ export function EventCard({ event, isCorrect, revealed = false }: EventCardProps
       transition={{ duration: 0.5 }}
       className="relative"
     >
-      <div 
+      <div
         className={`
           relative bg-white rounded-xl shadow-lg p-4 sm:p-6 border-4 transition-all duration-300
           ${isCorrect === true ? 'border-green-500' : ''}
