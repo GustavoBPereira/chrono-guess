@@ -23,7 +23,7 @@ export function EventCard({ event, isCorrect, revealed = false }: EventCardProps
     >
       <div 
         className={`
-          relative bg-white rounded-xl shadow-lg p-6 border-4 transition-all duration-300
+          relative bg-white rounded-xl shadow-lg p-4 sm:p-6 border-4 transition-all duration-300
           ${isCorrect === true ? 'border-green-500' : ''}
           ${isCorrect === false ? 'border-red-500' : 'border-indigo-200'}
         `}
@@ -49,7 +49,7 @@ export function EventCard({ event, isCorrect, revealed = false }: EventCardProps
         )}
 
         <div className="text-center">
-          <h3 className="text-2xl font-bold text-gray-800 mb-2">{event.title}</h3>
+          <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">{event.title}</h3>
           <p className="text-gray-600 mb-4">{event.summary}</p>
           {revealed && event.year !== null && (
             <div className="inline-block bg-indigo-100 text-indigo-700 px-4 py-2 rounded-full font-semibold">

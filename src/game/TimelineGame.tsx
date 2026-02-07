@@ -82,16 +82,16 @@ export default function TimelineGame() {
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-4 sm:p-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row items-center sm:justify-between mb-8">
           <div className="flex items-center gap-2">
             <Calendar className="w-8 h-8 text-indigo-600" />
-            <h1 className="text-4xl font-bold text-gray-800">ChronoGuess</h1>
+            <h1 className="text-2xl sm:text-4xl font-bold text-gray-800 mt-4 sm:mt-0">ChronoGuess</h1>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2 sm:gap-6 mt-4 sm:mt-0">
             {/* Lives */}
             <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-md">
               <Heart className="w-5 h-5 text-red-500" fill="currentColor" />
