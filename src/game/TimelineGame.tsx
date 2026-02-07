@@ -117,7 +117,7 @@ export default function TimelineGame() {
 
         {/* Current Card */}
         {currentCard && (
-          <div className="mb-8">
+          <div className="fixed bottom-0 left-0 right-0 flex justify-center p-4 z-20">
             <EventCard event={currentCard} isCorrect={isCorrect} />
           </div>
         )}
