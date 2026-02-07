@@ -1,7 +1,7 @@
 // src/services/game.ts
 import { Match, PlayCardResponse } from '../types/game';
 
-const API_BASE_URL = 'http://ec2-98-94-89-114.compute-1.amazonaws.com/api';
+const API_BASE_URL = 'https://api.chronoguess.com/api';
 
 export const createMatch = async (): Promise<Match> => {
   const response = await fetch(`${API_BASE_URL}/match/`);

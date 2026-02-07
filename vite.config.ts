@@ -21,7 +21,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://ec2-98-94-89-114.compute-1.amazonaws.com',
+        target: 'https://api.chronoguess.com',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
