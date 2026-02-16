@@ -139,7 +139,7 @@ export default function TimelineGame() {
             <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-md">
               <Trophy className="w-5 h-5 text-yellow-500" />
               <span className="font-semibold text-gray-700">
-                {t.remaining} {match.remaining_deck}
+                {match.timeline.length} / {match.timeline_size_goal}
               </span>
             </div>
 
