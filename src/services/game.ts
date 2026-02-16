@@ -3,8 +3,8 @@ import { Match, PlayCardResponse } from '../types/game';
 
 const API_BASE_URL = 'https://api.chronoguess.com/api';
 
-export const createMatch = async (): Promise<Match> => {
-  const response = await fetch(`${API_BASE_URL}/match/`);
+export const createMatch = async (lang: 'en' | 'pt-br' = 'en'): Promise<Match> => {
+  const response = await fetch(`${API_BASE_URL}/match/?lang=${lang}`);
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDrag } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
-import { Heart, Trophy, Calendar } from 'lucide-react';
+import { Heart, Trophy, Calendar, Globe } from 'lucide-react';
 
 import { useAutoScroll } from '../hooks/useAutoScroll';
 import { CustomDragLayer } from './CustomDragLayer';
@@ -22,19 +22,20 @@ export default function TimelineGame() {
   const [match, setMatch] = useState<Match | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [lang, setLang] = useState<'en' | 'pt-br'>('en');
 
   // Enable auto-scrolling when dragging
   useAutoScroll();
 
-  // Initialize game
+  // Initialize game and restart when language changes
   useEffect(() => {
     startNewGame();
-  }, []);
+  }, [lang]);
 
   const startNewGame = async () => {
     setLoading(true);
     try {
-      const initialMatch = await createMatch();
+      const initialMatch = await createMatch(lang);
       setMatch(initialMatch);
       setIsCorrect(null);
     } catch (error) {
@@ -103,6 +104,21 @@ export default function TimelineGame() {
           <div className="flex items-center gap-2">
             <Calendar className="w-8 h-8 text-indigo-600" />
             <h1 className="text-2xl sm:text-4xl font-bold text-gray-800 mt-4 sm:mt-0">ChronoGuess</h1>
+          </div>
+
+          <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-md mx-4">
+            <Globe className="w-5 h-5 text-indigo-500" />
+            <select
+              value={lang}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                const newLang = e.target.value as 'en' | 'pt-br';
+                setLang(newLang);
+              }}
+              className="bg-transparent font-semibold text-gray-700 outline-none cursor-pointer"
+            >
+              <option value="en">English</option>
+              <option value="pt-br">Português</option>
+            </select>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-6 mt-4 sm:mt-0">
