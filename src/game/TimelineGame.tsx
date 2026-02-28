@@ -57,7 +57,7 @@ export default function TimelineGame() {
 
     setLoading(true);
     try {
-      const response = await playCard(match.id, currentCard.id, position);
+      const response = await playCard(match, currentCard.id, position);
       setIsCorrect(response.status === 'correct');
       setMatch(response.match);
 

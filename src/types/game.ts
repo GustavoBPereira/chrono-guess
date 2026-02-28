@@ -12,6 +12,7 @@ export interface Match {
   player_hand: Occurrence[];
   timeline: Occurrence[];
   mistakes: Occurrence[];
+  deck: Occurrence[];
   timeline_size_goal: number;
   remaining_life: number;
   status: "ongoing" | "win" | "lose";
